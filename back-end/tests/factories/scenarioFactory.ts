@@ -1,5 +1,4 @@
 import { prisma } from "../../src/database";
-import { RecommendationType } from "../../src/types/types";
 
 async function deleteAllData() {
   await prisma.$executeRaw`TRUNCATE TABLE recommendations`;
