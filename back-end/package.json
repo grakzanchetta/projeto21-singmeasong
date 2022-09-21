@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "prisma-test": "npx dotenv -e .env.test prisma migrate reset --skip-seed",
-    "test": "npm run prisma-test && dotenv -e .env.test jest --no-cache"
+    "prisma-test": "npx dotenv -e .env.test prisma migrate reset",
+    "test": "npm run prisma-test && dotenv -e .env.test jest -i --coverage"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

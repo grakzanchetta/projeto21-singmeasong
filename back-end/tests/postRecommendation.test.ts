@@ -11,10 +11,11 @@ import {
   missingLinkFactory,
   missingNameFactory,
 } from "../tests/factories/recommendationFactory";
+import { prisma } from "../src/database";
 
-beforeEach(async () => {
-  await deleteAllData();
-});
+// beforeEach(async () => {
+//   await deleteAllData();
+// });
 
 const agent = supertest(app);
 

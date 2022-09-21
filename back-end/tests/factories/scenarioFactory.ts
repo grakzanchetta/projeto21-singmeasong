@@ -1,4 +1,5 @@
 import { prisma } from "../../src/database";
+import { correctDataFactory } from "../factories/recommendationFactory";
 
 async function deleteAllData() {
   await prisma.$executeRaw`TRUNCATE TABLE recommendations`;
@@ -18,4 +19,25 @@ async function startConflict() {
   });
 }
 
-export { deleteAllData, disconnectPrisma, startConflict };
+async function postRecommendationForVoting() {
+  const post = correctDataFactory();
+  await prisma.recommendation.create({
+    data: {
+      name: post.name,
+      youtubeLink: post.youtubeLink,
+    },
+  });
+
+  const recommendation = await prisma.recommendation.findFirst({});
+
+  const id = Number(recommendation.id);
+
+  return id;
+}
+
+export {
+  deleteAllData,
+  disconnectPrisma,
+  startConflict,
+  postRecommendationForVoting,
+};

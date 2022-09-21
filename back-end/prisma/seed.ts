@@ -31,7 +31,7 @@ async function main() {
         name: "Henrique e Juliano - Colega de Caso",
         youtubeLink:
           "https://www.youtube.com/watch?v=6B5-c0EgvC4&ab_channel=HenriqueeJuliano",
-        score: -53299,
+        score: -1,
       },
     ],
   });
