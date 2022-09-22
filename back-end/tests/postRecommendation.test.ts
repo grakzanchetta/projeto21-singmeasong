@@ -1,7 +1,6 @@
 import app from "../src/app";
 import supertest from "supertest";
 import {
-  deleteAllData,
   disconnectPrisma,
   startConflict,
 } from "../tests/factories/scenarioFactory";
@@ -11,11 +10,6 @@ import {
   missingLinkFactory,
   missingNameFactory,
 } from "../tests/factories/recommendationFactory";
-import { prisma } from "../src/database";
-
-// beforeEach(async () => {
-//   await deleteAllData();
-// });
 
 const agent = supertest(app);
 
