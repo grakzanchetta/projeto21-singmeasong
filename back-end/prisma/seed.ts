@@ -1,13 +1,13 @@
 import { prisma } from "../src/database.js";
 
-async function main() {
+export async function main() {
   await prisma.recommendation.createMany({
     data: [
       {
         name: "Frank Zappa - The Little House I Used To Live In",
         youtubeLink:
           "https://www.youtube.com/watch?v=XduaWFznN5s&ab_channel=FrankZappa-Topic",
-        score: 20,
+        score: 13,
       },
       {
         name: "Iron Maiden - The Number of The Beast",
@@ -31,7 +31,7 @@ async function main() {
         name: "Bee Gees - Night Fever",
         youtubeLink:
           "https://www.youtube.com/watch?v=SkypZuY6ZvA&ab_channel=BeeGeesVEVO",
-        score: 5,
+        score: 25,
       },
       {
         name: "Henrique e Juliano - Colega de Caso",
