@@ -1,6 +1,16 @@
 import { RecommendationType } from "../../src/types/types";
 import { faker } from "@faker-js/faker";
 
+function fullUserDataFactory() {
+  return {
+    id: 100,
+    name: "Teste",
+    youtubeLink:
+      "https://www.youtube.com/results?search_query=corinthians+chelsea+2012+melhores+momentos+espn",
+    score: 150,
+  };
+}
+
 function correctDataFactory(): RecommendationType {
   return {
     name: faker.name.fullName(),
@@ -36,4 +46,5 @@ export {
   wrongLinkFactory,
   missingLinkFactory,
   missingNameFactory,
+  fullUserDataFactory,
 };

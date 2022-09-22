@@ -1,12 +1,12 @@
-import app from "../src/app";
+import app from "../../src/app";
 import supertest from "supertest";
-import { generateRandomNumber } from "../tests/factories/mathFactory";
+import { generateRandomNumber } from "../../tests/factories/mathFactory";
 import {
   disconnectPrisma,
   findLastRegistry,
   deleteMyDatabase,
   recreateDatabase,
-} from "./factories/scenarioFactory";
+} from "../factories/scenarioFactory";
 
 const agent = supertest(app);
 

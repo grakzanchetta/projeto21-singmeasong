@@ -1,9 +1,9 @@
-import app from "../src/app";
+import app from "../../src/app";
 import supertest from "supertest";
 import {
   disconnectPrisma,
   postRecommendationForVoting,
-} from "../tests/factories/scenarioFactory";
+} from "../../tests/factories/scenarioFactory";
 
 const agent = supertest(app);
 

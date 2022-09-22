@@ -1,15 +1,15 @@
-import app from "../src/app";
+import app from "../../src/app";
 import supertest from "supertest";
 import {
   disconnectPrisma,
   startConflict,
-} from "../tests/factories/scenarioFactory";
+} from "../../tests/factories/scenarioFactory";
 import {
   correctDataFactory,
   wrongLinkFactory,
   missingLinkFactory,
   missingNameFactory,
-} from "../tests/factories/recommendationFactory";
+} from "../../tests/factories/recommendationFactory";
 
 const agent = supertest(app);
 
