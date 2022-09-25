@@ -117,3 +117,21 @@ describe("Recommendation Service Unity Tests", () => {
     expect(query).rejects.toEqual(errors.notFoundError(""));
   });
 });
+
+it("Should remove a recommendation with a score of -6 or less", async () => {
+  jest
+    .spyOn(recommendationRepository, "find")
+    .mockResolvedValueOnce(badUserData);
+
+  jest
+    .spyOn(recommendationRepository, "updateScore")
+    .mockResolvedValueOnce({ ...badUserData, score: -325 });
+
+  jest.spyOn(recommendationRepository, "remove").mockResolvedValueOnce();
+
+  await recommendationService.downvote(badUserData.id);
+
+  expect(recommendationRepository.updateScore).toBeCalledTimes(1);
+  expect(recommendationRepository.find).toBeCalledTimes(1);
+  expect(recommendationRepository.remove).toBeCalledTimes(1);
+});
