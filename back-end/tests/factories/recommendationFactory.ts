@@ -11,6 +11,16 @@ function fullUserDataFactory() {
   };
 }
 
+function badRecommendationFactory() {
+  return {
+    id: 125,
+    name: "Henrique e Juliano - Colega de Caso",
+    youtubeLink:
+      "https://www.youtube.com/watch?v=6B5-c0EgvC4&ab_channel=HenriqueeJuliano",
+    score: -11,
+  };
+}
+
 function correctDataFactory(): RecommendationType {
   return {
     name: faker.name.fullName(),
@@ -42,6 +52,7 @@ function missingLinkFactory(): RecommendationType {
 }
 
 export {
+  badRecommendationFactory,
   correctDataFactory,
   wrongLinkFactory,
   missingLinkFactory,

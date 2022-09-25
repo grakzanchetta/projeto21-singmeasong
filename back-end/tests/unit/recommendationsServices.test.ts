@@ -2,6 +2,7 @@ import { jest } from "@jest/globals";
 import { recommendationRepository } from "../../src/repositories/recommendationRepository";
 import { recommendationService } from "../../src/services/recommendationsService";
 import {
+  badRecommendationFactory,
   correctDataFactory,
   fullUserDataFactory,
 } from "../factories/recommendationFactory";
@@ -9,45 +10,110 @@ import * as errors from "../../src/utils/errorUtils";
 
 const rightRecommendation = correctDataFactory();
 const fullUserData = fullUserDataFactory();
+const badUserData = badRecommendationFactory();
 
-test("in the insert recommendation service, the video should be inserted if correct data is posted", async () => {
-  jest
-    .spyOn(recommendationRepository, "findByName")
-    .mockResolvedValueOnce(null);
-
-  jest.spyOn(recommendationRepository, "create");
-
-  await recommendationService.insert(rightRecommendation);
-  expect(recommendationRepository.create).toBeCalledTimes(1);
+beforeEach(() => {
+  jest.resetAllMocks();
+  jest.clearAllMocks();
 });
 
-test("in the insert recommendation service, the video should not be inserted if the name is repeated", async () => {
-  jest
-    .spyOn(recommendationRepository, "findByName")
-    .mockResolvedValueOnce(fullUserData);
-  const query = recommendationService.insert(rightRecommendation);
+describe("Recommendation Service Unity Tests", () => {
+  it("Should insert a recommendation", async () => {
+    jest
+      .spyOn(recommendationRepository, "findByName")
+      .mockImplementationOnce((): any => {});
 
-  expect(query).rejects.toEqual(
-    errors.conflictError("Recommendations names must be unique")
-  );
-});
+    jest
+      .spyOn(recommendationRepository, "create")
+      .mockImplementationOnce((): any => {});
 
-test("in the upvote recommendation service, a song with a valid id can be upvoted", async () => {
-  jest
-    .spyOn(recommendationRepository, "find")
-    .mockResolvedValueOnce(fullUserData);
+    await recommendationService.insert(rightRecommendation);
 
-  jest
-    .spyOn(recommendationRepository, "updateScore")
-    .mockResolvedValueOnce({ ...fullUserData, score: fullUserData.score + 1 });
+    expect(recommendationRepository.findByName).toBeCalledTimes(1);
+    expect(recommendationRepository.create).toBeCalledTimes(1);
+  });
+  it("Shouldn't insert a repeated recommendation name", async () => {
+    jest
+      .spyOn(recommendationRepository, "findByName")
+      .mockImplementationOnce((): any => {
+        return {
+          rightRecommendation,
+        };
+      });
 
-  await recommendationService.upvote(fullUserData.id);
-  expect(recommendationRepository.updateScore).toBeCalledTimes(1);
-});
+    const query = recommendationService.insert(rightRecommendation);
 
-test("in the upvote recommendation service, a song with an invalid id cannot be upvoted", async () => {
-  jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(null);
+    expect(query).rejects.toEqual(
+      errors.conflictError("Recommendations names must be unique")
+    );
+  });
+  it("Should upvote a recommendation", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {
+        return {
+          fullUserData,
+        };
+      });
 
-  const query = recommendationService.upvote(1);
-  expect(query).rejects.toEqual(errors.notFoundError(""));
+    jest
+      .spyOn(recommendationRepository, "updateScore")
+      .mockImplementationOnce((): any => {
+        return {};
+      });
+
+    await recommendationService.upvote(fullUserData.id);
+
+    expect(recommendationRepository.updateScore).toBeCalledTimes(1);
+    expect(recommendationRepository.find).toBeCalledTimes(1);
+  });
+
+  it("Shouldn't upvote a recommendation that doesn't exist", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {});
+
+    jest
+      .spyOn(recommendationRepository, "updateScore")
+      .mockImplementationOnce((): any => {});
+
+    const query = recommendationService.upvote(fullUserData.id);
+
+    expect(query).rejects.toEqual(errors.notFoundError(""));
+  });
+
+  it("Should downvote a recommendation", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {
+        return {
+          fullUserData,
+        };
+      });
+
+    jest
+      .spyOn(recommendationRepository, "updateScore")
+      .mockImplementationOnce((): any => {
+        return {};
+      });
+
+    await recommendationService.downvote(fullUserData.id);
+
+    expect(recommendationRepository.updateScore).toBeCalledTimes(1);
+    expect(recommendationRepository.find).toBeCalledTimes(1);
+  });
+
+  it("Shouldn't downvote a recommendation that doesn't exist", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {});
+
+    jest
+      .spyOn(recommendationRepository, "updateScore")
+      .mockImplementationOnce((): any => {});
+
+    const query = recommendationService.downvote(fullUserData.id);
+
+    expect(query).rejects.toEqual(errors.notFoundError(""));
+  });
 });
