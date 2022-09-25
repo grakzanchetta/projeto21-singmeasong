@@ -5,8 +5,10 @@ import {
   badRecommendationFactory,
   correctDataFactory,
   fullUserDataFactory,
+  recommendationsData,
 } from "../factories/recommendationFactory";
 import * as errors from "../../src/utils/errorUtils";
+import { generateRandomNumber } from "../factories/mathFactory";
 
 const rightRecommendation = correctDataFactory();
 const fullUserData = fullUserDataFactory();
@@ -116,22 +118,89 @@ describe("Recommendation Service Unity Tests", () => {
 
     expect(query).rejects.toEqual(errors.notFoundError(""));
   });
-});
 
-it("Should remove a recommendation with a score of -6 or less", async () => {
-  jest
-    .spyOn(recommendationRepository, "find")
-    .mockResolvedValueOnce(badUserData);
+  it("Should remove a recommendation with a score of -6 or less", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockResolvedValueOnce(badUserData);
 
-  jest
-    .spyOn(recommendationRepository, "updateScore")
-    .mockResolvedValueOnce({ ...badUserData, score: -325 });
+    jest
+      .spyOn(recommendationRepository, "updateScore")
+      .mockResolvedValueOnce({ ...badUserData, score: -325 });
 
-  jest.spyOn(recommendationRepository, "remove").mockResolvedValueOnce();
+    jest.spyOn(recommendationRepository, "remove").mockResolvedValueOnce();
 
-  await recommendationService.downvote(badUserData.id);
+    await recommendationService.downvote(badUserData.id);
 
-  expect(recommendationRepository.updateScore).toBeCalledTimes(1);
-  expect(recommendationRepository.find).toBeCalledTimes(1);
-  expect(recommendationRepository.remove).toBeCalledTimes(1);
+    expect(recommendationRepository.updateScore).toBeCalledTimes(1);
+    expect(recommendationRepository.find).toBeCalledTimes(1);
+    expect(recommendationRepository.remove).toBeCalledTimes(1);
+  });
+
+  it("should get the 10 latest recommendations", async () => {
+    jest
+      .spyOn(recommendationRepository, "findAll")
+      .mockImplementationOnce((): any => {});
+
+    await recommendationService.get();
+
+    expect(recommendationRepository.findAll).toBeCalledTimes(1);
+  });
+
+  it("should get recommendation by id", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {
+        return {
+          fullUserData,
+        };
+      });
+
+    await recommendationService.getById(fullUserData.id);
+
+    expect(recommendationRepository.find).toBeCalledTimes(1);
+  });
+
+  it("should throw an error if the id doesn't exist", async () => {
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {});
+
+    const query = recommendationService.getById(fullUserData.id);
+
+    expect(query).rejects.toEqual(errors.notFoundError(""));
+  });
+  it("should get a random recommendation", async () => {
+    jest.spyOn(Math, "random").mockReturnValueOnce(0.6);
+    jest
+      .spyOn(recommendationRepository, "findAll")
+      .mockResolvedValueOnce(recommendationsData);
+
+    const query = await recommendationService.getRandom();
+    console.log(query);
+    const id = query.id;
+
+    expect(query.score).toEqual(recommendationsData[id - 1].score);
+  });
+
+  it("should throw an error if the data doesn't exist", async () => {
+    jest.spyOn(recommendationRepository, "findAll").mockResolvedValue([]);
+    try {
+      await recommendationService.getRandom();
+    } catch (error) {
+      expect(error.type).toBe("not_found");
+    }
+  });
+
+  it("should get the recommendations by an amount", async () => {
+    const amount = generateRandomNumber(1, 10);
+
+    jest
+      .spyOn(recommendationRepository, "getAmountByScore")
+      .mockImplementationOnce((): any => {});
+
+    await recommendationService.getTop(amount);
+
+    expect(recommendationRepository.getAmountByScore).toBeCalledTimes(1);
+  });
 });

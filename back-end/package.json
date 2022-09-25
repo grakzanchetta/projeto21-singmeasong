@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "prisma-test": "npx dotenv -e .env.test prisma migrate reset",
-    "test": "npm run prisma-test && dotenv -e .env.test jest -i --coverage"
+    "test": "npm run prisma-test && dotenv -e .env.test jest -i --coverage",
+    "test:unit": "dotenv -e .env.test jest -- -i --coverage --testPathPattern=tests/unit"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
