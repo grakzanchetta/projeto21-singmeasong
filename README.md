@@ -11,7 +11,7 @@
 
 ## Descrição
 
-Este é o vigésimo primeiro projeto do Bootcamp da Driven. O template foi entregue totalmente funcional, front e back end (instruções para rodar localmente à seguir). Entretanto, o mote deste projeto é a implementação de testes automatizados, a ver: End-to-End no front-end com o Cypress, Unitários e de Integração no back-end com o Jest. Nesse ultimo, os testes unitários abordaram apenas a camada de serviçoes.
+Este é o vigésimo primeiro projeto do Bootcamp da Driven. O template foi entregue totalmente funcional, front e back end (instruções para rodar localmente à seguir). Entretanto, o mote deste projeto é a implementação de testes automatizados, a ver: End-to-End no front-end com o Cypress, Unitários e de Integração no back-end com o Jest. Nesse ultimo, os testes unitários abordaram apenas a camada de serviços.
 
 ***
 
