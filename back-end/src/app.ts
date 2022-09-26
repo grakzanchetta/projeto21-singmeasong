@@ -9,12 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/recommendations", recommendationRouter);
 if (process.env.NODE_ENV === "TEST") {
   console.log("singing me a test");
-  app.use("/tests", testRouter);
+  app.use(testRouter);
 }
-
-app.use("/recommendations", recommendationRouter);
 app.use(errorHandlerMiddleware);
 
 export default app;

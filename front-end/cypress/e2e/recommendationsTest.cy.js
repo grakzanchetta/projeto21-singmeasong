@@ -2,6 +2,7 @@
 import { faker } from "@faker-js/faker";
 
 const url = "http://localhost:3000/";
+const resetDatabaseUrl = "http://localhost:5000/reset";
 const recommendation = {
   name: faker.name.fullName(),
   youtubeLink:
@@ -86,10 +87,32 @@ describe("Route POST /recommendations/id/downvote", () => {
 
 describe("Route GET /recommendations", () => {
   it("should appear only 10 recommendations in the main page", () => {
-    for (let i = 0; i <= 10; i++) {
+    cy.visit(url);
+    for (let i = 0; i <= 15; i++) {
       cy.get("input[id=elementName]").type(`Sou a recomendação ${i}`);
       cy.get("input[id=elementLink]").type(recommendation.youtubeLink);
       cy.get("button[id=post]").click();
     }
+    cy.get('[data-identifier="vote-menu"]').should("have.length.lt", 11);
+  });
+});
+
+describe("Route GET /top/", () => {
+  it("should show the recommendations ordered by score, maximum of 10", () => {
+    cy.visit(`${url}top`);
+    cy.get('[data-identifier="vote-menu"]').should("have.length.lte", 10);
+  });
+});
+
+describe("Route GET /random/", () => {
+  it("should show a random recommendation", () => {
+    cy.visit(`${url}random`);
+  });
+});
+
+describe("Reset db", () => {
+  it("ends the db", () => {
+    cy.request(`${resetDatabaseUrl}`);
+    cy.visit(`${url}`);
   });
 });

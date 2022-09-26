@@ -3,6 +3,6 @@ import { reset } from "../controllers/testController.js";
 
 const testRouter = Router();
 
-testRouter.delete("/reset", reset);
+testRouter.get("/reset", reset);
 
 export default testRouter;
